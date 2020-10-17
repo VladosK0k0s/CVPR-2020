@@ -5,9 +5,9 @@ import xlsxwriter
 import time
 from os import listdir
 from os.path import isfile, join
-onlyfiles = [f for f in listdir("dragon") if isfile(join("dragon", f))]
+onlyfiles = [f for f in listdir("lipstick") if isfile(join("lipstick", f))]
 
-mainImg = cv.imread("main_dragon.jpg", 0)
+mainImg = cv.imread("main_lipstick.jpg", 0)
 orb = cv.AKAZE_create()
 bf = cv.BFMatcher()
 kp1, des1 = orb.detectAndCompute(mainImg, None)
@@ -19,7 +19,7 @@ imageNamesArray = []
 for fileName in onlyfiles:
 
     startTime = time.time()
-    currentImg = cv.imread("dragon/" + fileName, 0)
+    currentImg = cv.imread("lipstick/" + fileName, 0)
     kp2, des2 = orb.detectAndCompute(currentImg, None)
 
     # org_image_sift = cv.drawKeypoints(mainImg, kp1, None, color=(0,255,0), flags=0)
@@ -32,15 +32,16 @@ for fileName in onlyfiles:
 
     goodMatchesCurrent = []
 
-    print(matches[0])
-
-    if len(matches) == 2:                     # check if match was found
+    try:                 # check if match was found
         for m, n in matches:
             if m.distance < 0.8*n.distance:
                 goodMatchesCurrent.append([m])
-    # img3 = cv.drawMatchesKnn(mainImg, kp1, currentImg, kp2, goodMatchesCurrent[:10],
-    #                          10, flags=cv.DrawMatchesFlags_NOT_DRAW_SINGLE_POINTS)
-    # plt.imshow(img3), plt.show()
+    except: 
+        print("skipping image")
+        goodMatchesCurrent.append(0)
+    img3 = cv.drawMatchesKnn(mainImg, kp1, currentImg, kp2, goodMatchesCurrent,
+                             10, flags=cv.DrawMatchesFlags_NOT_DRAW_SINGLE_POINTS)
+    plt.imshow(img3), plt.show()
 
     goodMatchesCountArray.append(len(goodMatchesCurrent))
     allMatchesCountArray.append(len(matches))
