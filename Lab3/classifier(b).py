@@ -29,7 +29,7 @@ def main():
     workbook = xlsxwriter.Workbook('data.xlsx')
 
     worksheet1 = workbook.add_worksheet()
-    for descriptor_n in [3]:
+    for descriptor_n in [1, 2, 3]:
         if descriptor_n == 1:
             descriptor_name = "ORB"
             nfeatures = 500
